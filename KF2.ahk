@@ -49,5 +49,5 @@ F4::Pause
 	{
 		Send, {LButton down}
 	}
-	Send, V
+	Send, F
 	Send, {LButton up}
