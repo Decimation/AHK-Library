@@ -13,9 +13,6 @@
 ; #UseHook
 
 
-global Alternative = false
-
-
 ; Reload
 F2::
 	;SoundPlay, C:\Library\Audio\ding2.wav
@@ -45,6 +42,7 @@ global CurWeapon = 0
 	CurWeapon="4"
 	Return
 
+; Drop-reload script
 ~*Z::
 	Send, X
 	Sleep, 10
