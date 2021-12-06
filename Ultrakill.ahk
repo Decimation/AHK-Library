@@ -10,6 +10,7 @@
 #InstallKeybdHook
 #KeyHistory 100
 #IfWinActive, ahk_exe ULTRAKILL.exe
+
 ; #InstallMouseHook
 ; #UseHook
 ;Menu, Tray, Icon, imageres.dll, 77
@@ -21,11 +22,17 @@
 ; 500
 ; 490
 ; 440
-global EquipTime = 500
-global SwitchTime = 600
-global ShotgunEquipped = false
-global KeyShotgun = 2
-global KeyMelee = "f"
+global EquipTime := 500
+global SwitchTime := 600
+global ShotgunEquipped := false
+global KeyShotgun := 2
+global KeyMelee := "f"
+
+ProjBoostKey := "C"
+ShotgunSwapKey := "R"
+
+Hotkey, *%ProjBoostKey%, ProjBoost
+Hotkey, *%ShotgunSwapKey%, ShotgunSwap
 
 ; #endregion
 
@@ -74,21 +81,10 @@ EquipShotgun()
 }
 
 
-ProjectileBoost()
-{
-	; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
 
-	Click
-	;...
-
-	Sleep, 16
-	Send, %KeyMelee%
-	ShotgunEquipped = true
-	Sleep, SwitchTime
-}
 
 ; Shotgun swapping
-*R::
+ShotgunSwap:
 	EnsureShotgun()
 	Loop
 	{
@@ -102,14 +98,22 @@ ProjectileBoost()
 
 
 ; Projectile boost
-*C::
+ProjBoost:
 	i = 0
 	l = 6
 
 	EnsureShotgun()
 	Loop
 	{
-		ProjectileBoost()
+		; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
+
+		Click
+		;...
+
+		Sleep, 16
+		Send, %KeyMelee%
+		ShotgunEquipped = true
+		Sleep, SwitchTime
 		EquipShotgun()
 		If ++i = l
 		{

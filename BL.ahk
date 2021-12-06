@@ -29,6 +29,7 @@ F4::Pause
 
 global CurWeapon = 0
 
+
 ~*1::
 	CurWeapon="1"
 	Return
@@ -41,6 +42,16 @@ global CurWeapon = 0
 ~*4::
 	CurWeapon="4"
 	Return
+
+^LButton:
+	Loop
+	{
+		GetKeyState, state, LButton, P
+		If state = U
+			Return
+		Click
+		Sleep, 10
+	}
 
 ; Drop-reload script
 ~*Z::
