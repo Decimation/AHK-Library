@@ -1,5 +1,5 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#Warn  ; Enable warnings to assist with detecting common errors.
+﻿#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
+#Warn ; Enable warnings to assist with detecting common errors.
 
 #Warn, UseUnsetGlobal, Off
 
@@ -15,24 +15,26 @@
 ; #UseHook
 ;Menu, Tray, Icon, imageres.dll, 77
 
-
 ; #region
-
 
 ; 500
 ; 490
 ; 440
+
 global EquipTime := 500
 global SwitchTime := 600
 global ShotgunEquipped := false
 global KeyShotgun := 2
 global KeyMelee := "f"
-
-ProjBoostKey := "C"
-ShotgunSwapKey := "R"
+global FeedbackerEquipped := false
+global ProjBoostKey := "C"
+global ShotgunSwapKey := "R"
+global t := "XButton2"
 
 Hotkey, *%ProjBoostKey%, ProjBoost
 Hotkey, *%ShotgunSwapKey%, ShotgunSwap
+
+Hotkey, ~*%t%, ArmToggle
 
 ; #endregion
 
@@ -51,58 +53,95 @@ F3::Suspend
 F4::Pause
 
 
+ArmToggle()
+{
+	global FeedbackerEquipped
+
+	if FeedbackerEquipped = false
+	{
+		FeedbackerEquipped = true
+	}
+	else if FeedbackerEquipped = true
+	{
+		FeedbackerEquipped = false
+	}else{
+		FeedbackerEquipped = true
+	}
+	; MsgBox %FeedbackerEquipped%
+	Return
+}
+
 ~1::
 ~3::
 ~4::
+	global ShotgunEquipped
 	ShotgunEquipped = false
 	Return
 
 ~2::
+	global ShotgunEquipped
 	ShotgunEquipped = true
 	Return
 
-
 ; #region
-
 
 EnsureShotgun()
 {
+	global ShotgunEquipped
 	If ShotgunEquipped = false
 	{
 		EquipShotgun()
 	}
 }
 
+EnsureFeedbacker()
+{
+	global FeedbackerEquipped
+	if FeedbackerEquipped = false
+	{
+		SendInput, {XButton2}
+		; SendInput, {XButton2 Up}
+		FeedbackerEquipped = true
+	}
+}
+
 EquipShotgun()
 {
+	global KeyShotgun
+	global EquipTime
+	global ShotgunEquipped
 	Send, %KeyShotgun%
 	Sleep, EquipTime
 	ShotgunEquipped = true
 }
 
-
-
-
 ; Shotgun swapping
 ShotgunSwap:
+	global ShotgunSwapKey
 	EnsureShotgun()
+
 	Loop
 	{
-		GetKeyState, state, R, P
+		GetKeyState, state, %ShotgunSwapKey%, P
 		If state = U
 			Return
 		Click
-		Send, %KeyShotgun%
-		Sleep, EquipTime
+		;Send, %KeyShotgun%
+		;Sleep, EquipTime
+		EquipShotgun()
 	}
 
-
-; Projectile boost
+	; Projectile boost
 ProjBoost:
+	global KeyMelee
+	global ShotgunEquipped
+	global SwitchTime
 	i = 0
 	l = 6
 
 	EnsureShotgun()
+	EnsureFeedbacker()
+
 	Loop
 	{
 		; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
@@ -115,6 +154,9 @@ ProjBoost:
 		ShotgunEquipped = true
 		Sleep, SwitchTime
 		EquipShotgun()
+		EnsureFeedbacker()
+		
+
 		If ++i = l
 		{
 			SoundPlay, C:\Library\Audio\warning.wav
@@ -127,6 +169,6 @@ ProjBoost:
 			Return
 	}
 
-	Return
+Return
 
 ; #endregion

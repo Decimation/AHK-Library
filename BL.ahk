@@ -43,7 +43,7 @@ global CurWeapon = 0
 	CurWeapon="4"
 	Return
 
-^LButton:
+~*LButton:
 	Loop
 	{
 		GetKeyState, state, LButton, P
