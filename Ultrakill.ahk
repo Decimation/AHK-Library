@@ -11,63 +11,64 @@
 #KeyHistory 100
 #IfWinActive, ahk_exe ULTRAKILL.exe
 
-; #InstallMouseHook
-; #UseHook
-;Menu, Tray, Icon, imageres.dll, 77
+	; #InstallMouseHook
+	; #UseHook
+	;Menu, Tray, Icon, imageres.dll, 77
 
-; #region
+	; #region
 
-; 500
-; 490
-; 440
+	; 500
+	; 490
+	; 440
 
-global EquipTime := 500
-global SwitchTime := 600
-global ShotgunEquipped := false
-global KeyShotgun := 2
-global KeyMelee := "f"
-global FeedbackerEquipped := false
-global ProjBoostKey := "C"
-global ShotgunSwapKey := "R"
-global t := "XButton2"
+	global EquipTime := 500
+	global SwitchTime := 600
+	global ShotgunEquipped := false
+	global KeyShotgun := 2
+	global KeyMelee := "f"
+	global FeedbackerEquipped := false
+	global ProjBoostKey := "C"
+	global ShotgunSwapKey := "R"
+	global t := "XButton2"
 
-Hotkey, *%ProjBoostKey%, ProjBoost
-Hotkey, *%ShotgunSwapKey%, ShotgunSwap
+	Hotkey, *%ProjBoostKey%, ProjBoost
+	Hotkey, *%ShotgunSwapKey%, ShotgunSwap
 
-Hotkey, ~*%t%, ArmToggle
+	Hotkey, ~*%t%, ArmToggle
 
-; #endregion
+	; #endregion
 
-; Reload
-F2::
-	;SoundPlay, C:\Library\Audio\ding2.wav
-	;SoundPlay, *-1
-	SoundPlay, C:\Library\Audio\hint.wav, 1
-	Reload
+	; Reload
+	F2::
+		;SoundPlay, C:\Library\Audio\ding2.wav
+		;SoundPlay, *-1
+		SoundPlay, C:\Library\Audio\hint.wav, 1
+		Reload
 	Return
 
-; Suspend
-F3::Suspend
+	; Suspend
+	F3::Suspend
 
-; Pause
-F4::Pause
+	; Pause
+	F4::Pause
 
-
-ArmToggle()
-{
-	global FeedbackerEquipped
-
-	if FeedbackerEquipped = false
+	ArmToggle()
 	{
-		FeedbackerEquipped = true
-	}
-	else if FeedbackerEquipped = true
-	{
-		FeedbackerEquipped = false
-	}else{
-		FeedbackerEquipped = true
-	}
-	; MsgBox %FeedbackerEquipped%
+		global FeedbackerEquipped
+
+		if FeedbackerEquipped = false
+		{
+			FeedbackerEquipped = true
+		}
+		else if FeedbackerEquipped = true
+		{
+			FeedbackerEquipped = false
+		}else{
+			FeedbackerEquipped = true
+		}
+		; SoundPlay, C:\Library\Audio\beep.wav, 1
+
+		; MsgBox %FeedbackerEquipped%
 	Return
 }
 
@@ -76,12 +77,12 @@ ArmToggle()
 ~4::
 	global ShotgunEquipped
 	ShotgunEquipped = false
-	Return
+Return
 
 ~2::
 	global ShotgunEquipped
 	ShotgunEquipped = true
-	Return
+Return
 
 ; #region
 
@@ -140,7 +141,7 @@ ProjBoost:
 	l = 6
 
 	EnsureShotgun()
-	EnsureFeedbacker()
+	; EnsureFeedbacker()
 
 	Loop
 	{
@@ -154,8 +155,7 @@ ProjBoost:
 		ShotgunEquipped = true
 		Sleep, SwitchTime
 		EquipShotgun()
-		EnsureFeedbacker()
-		
+		; EnsureFeedbacker()
 
 		If ++i = l
 		{
