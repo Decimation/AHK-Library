@@ -25,13 +25,17 @@
 	global SwitchTime := 600
 	global ShotgunEquipped := false
 	global KeyShotgun := 2
+	global KeyRocketLauncher := 5
+
 	global KeyMelee := "f"
 	global FeedbackerEquipped := false
 	global ProjBoostKey := "C"
+	global ProjBoost2Key := "X"
 	global ShotgunSwapKey := "R"
 	global t := "XButton2"
 
 	Hotkey, *%ProjBoostKey%, ProjBoost
+	Hotkey, *%ProjBoost2Key%, ProjBoost2
 	Hotkey, *%ShotgunSwapKey%, ShotgunSwap
 
 	Hotkey, ~*%t%, ArmToggle
@@ -69,106 +73,130 @@
 		; SoundPlay, C:\Library\Audio\beep.wav, 1
 
 		; MsgBox %FeedbackerEquipped%
+		Return
+	}
+
+	~1::
+	~3::
+	~4::
+		global ShotgunEquipped
+		ShotgunEquipped = false
 	Return
-}
 
-~1::
-~3::
-~4::
-	global ShotgunEquipped
-	ShotgunEquipped = false
-Return
+	~2::
+		global ShotgunEquipped
+		ShotgunEquipped = true
+	Return
 
-~2::
-	global ShotgunEquipped
-	ShotgunEquipped = true
-Return
+	; #region
 
-; #region
-
-EnsureShotgun()
-{
-	global ShotgunEquipped
-	If ShotgunEquipped = false
-	{
-		EquipShotgun()
-	}
-}
-
-EnsureFeedbacker()
-{
-	global FeedbackerEquipped
-	if FeedbackerEquipped = false
-	{
-		SendInput, {XButton2}
-		; SendInput, {XButton2 Up}
-		FeedbackerEquipped = true
-	}
-}
-
-EquipShotgun()
-{
-	global KeyShotgun
-	global EquipTime
-	global ShotgunEquipped
-	Send, %KeyShotgun%
-	Sleep, EquipTime
-	ShotgunEquipped = true
-}
-
-; Shotgun swapping
-ShotgunSwap:
-	global ShotgunSwapKey
 	EnsureShotgun()
-
-	Loop
 	{
-		GetKeyState, state, %ShotgunSwapKey%, P
-		If state = U
-			Return
-		Click
-		;Send, %KeyShotgun%
-		;Sleep, EquipTime
-		EquipShotgun()
+		global ShotgunEquipped
+		If ShotgunEquipped = false
+		{
+			EquipShotgun()
+		}
 	}
+
+	EnsureFeedbacker()
+	{
+		global FeedbackerEquipped
+		if FeedbackerEquipped = false
+		{
+			SendInput, {XButton2}
+			; SendInput, {XButton2 Up}
+			FeedbackerEquipped = trued
+		}
+	}
+
+	EquipShotgun()
+	{
+		global KeyShotgun
+		global EquipTime
+		global ShotgunEquipped
+		Send, %KeyShotgun%
+		Sleep, EquipTime
+		ShotgunEquipped = true
+	}
+
+	; Shotgun swapping
+	ShotgunSwap:
+		global ShotgunSwapKey
+		EnsureShotgun()
+
+		Loop
+		{
+			GetKeyState, state, %ShotgunSwapKey%, P
+			If state = U
+				Return
+			Click
+			;Send, %KeyShotgun%
+			;Sleep, EquipTime
+			EquipShotgun()
+		}
+
+	ProjBoost2:
+
+		Loop
+		{
+			; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
+
+			
+			;...
+
+			MouseClick,Right
+			Send, %KeyMelee%
+			; EnsureFeedbacker()
+			Sleep, 1150
+			
+			;GetKeyState, state, X, P
+			;If state = U
+			;	Return
+
+			if !GetKeyState("X", "P")  ; The key has been released, so break out of the loop.
+        		break
+		}
+
+	Return
 
 	; Projectile boost
-ProjBoost:
-	global KeyMelee
-	global ShotgunEquipped
-	global SwitchTime
-	i = 0
-	l = 6
+	ProjBoost:
+		global KeyMelee
+		global ShotgunEquipped
+		global SwitchTime
+		i = 0
+		l = 6
 
-	EnsureShotgun()
-	; EnsureFeedbacker()
-
-	Loop
-	{
-		; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
-
-		Click
-		;...
-
-		Sleep, 16
-		Send, %KeyMelee%
-		ShotgunEquipped = true
-		Sleep, SwitchTime
-		EquipShotgun()
+		EnsureShotgun()
 		; EnsureFeedbacker()
 
-		If ++i = l
+		Loop
 		{
-			SoundPlay, C:\Library\Audio\warning.wav
-			;Sleep, 500
-			;Return
-			;Break
-		}
-		GetKeyState, state, C, P
-		If state = U
-			Return
-	}
+			; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
 
-Return
+			Click
+			;...
+
+			Sleep, 16
+			Send, %KeyMelee%
+			ShotgunEquipped = true
+			Sleep, SwitchTime
+			EquipShotgun()
+			; EnsureFeedbacker()
+
+			If ++i = l
+			{
+				SoundPlay, C:\Library\Audio\warning.wav
+				;Sleep, 500
+				;Return
+				;Break
+			}
+			GetKeyState, state, C, P
+			If state = U
+				Return
+		}
+
+	Return
 
 ; #endregion
