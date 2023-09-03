@@ -33,6 +33,7 @@
 	global ProjBoost2Key := "X"
 	global ShotgunSwapKey := "R"
 	global t := "XButton2"
+	global RLCooldown := false
 
 	Hotkey, *%ProjBoostKey%, ProjBoost
 	Hotkey, *%ProjBoost2Key%, ProjBoost2
@@ -138,25 +139,33 @@
 
 	ProjBoost2:
 
-		Loop
-		{
-			; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
+		; https://ultrakill.fandom.com/wiki/Movement_Guide#Projectile_Boost
 
-			
-			;...
+		;...
 
-			MouseClick,Right
-			Send, %KeyMelee%
-			; EnsureFeedbacker()
-			Sleep, 1150
-			
-			;GetKeyState, state, X, P
-			;If state = U
-			;	Return
+		global RLCooldown
 
-			if !GetKeyState("X", "P")  ; The key has been released, so break out of the loop.
-        		break
+		if RLCooldown = true
+			{
+			SoundPlay, C:\Library\Audio\warning.wav
+			Return
+
 		}
+
+		
+		MouseClick,Right
+		Send, %KeyMelee%
+		RLCooldown = true
+		; EnsureFeedbacker()
+		Sleep, 8000
+
+		RLCooldown = false
+		;GetKeyState, state, X, P
+		;If state = U
+		;	Return
+
+		;if !GetKeyState("X", "P") ; The key has been released, so break out of the loop.
+		;	break
 
 	Return
 

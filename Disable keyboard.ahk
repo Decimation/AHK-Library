@@ -1,6 +1,6 @@
 hk(f=0) {  ; By FeiYue
   static allkeys, ExcludeKeys:="LButton,RButton"
-  if !allkeys
+  if !allkeysjugt
   {
     s:="||NumpadEnter|Home|End|PgUp|PgDn|Left|Right|Up|Down|Del|Ins|"
     Loop, 254
